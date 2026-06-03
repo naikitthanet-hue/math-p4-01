@@ -1,4 +1,4 @@
-// เครื่องสังเคราะห์สร้างเสียงเอฟเฟกต์ดนตรีประกอบในตัว (Web Audio Synthesizer) ป้องกันปัญหาโดนบล็อกไฟล์เสียงจากเบราว์เซอร์
+// เครื่องสร้างเสียงดนตรีและเอฟเฟกต์ในตัว (Web Audio Synthesizer) ป้องกันปัญหาเบราว์เซอร์บล็อกเสียงภายนอก
 class SoundSynth {
     constructor() {
         this.ctx = null;
@@ -29,7 +29,7 @@ class SoundSynth {
     correct() {
         this.init();
         const now = this.ctx.currentTime;
-        const freqs = [523.25, 659.25, 783.99, 1046.50]; // ไล่โน้ตใสตอบถูก
+        const freqs = [523.25, 659.25, 783.99, 1046.50]; // คอร์ดเสียงใสเมื่อตอบถูก
         freqs.forEach((f, index) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
@@ -69,7 +69,6 @@ class SoundSynth {
         const melody = [329.63, 349.23, 392.00, 392.00, 392.00, 440.00, 349.23, 329.63, 261.63, 293.66, 329.63, 329.63];
         
         this.beatInterval = setInterval(() => {
-            // สร้างบีทดนตรีประกอบเสริมสร้างสมาธิวิชาคณิตศาสตร์
             if (step % 4 === 0) {
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
@@ -110,7 +109,7 @@ class SoundSynth {
 
 const synth = new SoundSynth();
 
-// การบริหารจัดการตัวแปรสถานะ
+// การบริหารจัดการตัวแปรสถานะเกม
 let currentIdx = 0;
 let score = 0;
 let active = false;
@@ -120,7 +119,7 @@ let pose = null;
 let camera = null;
 let playMusic = true;
 
-// ระบบจัดการสถิตินาฬิกาจับเวลาสะสม
+// ระบบจัดการนาฬิกาจับเวลาสะสม
 let timerInterval = null;
 let secondsElapsed = 0;
 
@@ -128,7 +127,7 @@ const video = document.querySelector('.input_video');
 const canvas = document.querySelector('.output_canvas');
 const ctx = canvas.getContext('2d');
 
-// พิกัดวงกลม ก ข ค ง ทั้ง 4 มุมจอภาพ บนขนาด Canvas 800x600 
+// พิกัดวงกลม ก ข ค ง ทั้ง 4 มุมจอภาพ บนขนาด Canvas 800x600 (เป็นจุดตรวจจับท่าทางที่เป็นอิสระจากปุ่มภายนอก)
 const targetZones = [
     { id: 0, label: "ก", x: 120, y: 160, radius: 75, color: "#10b981" }, // บนซ้าย
     { id: 1, label: "ข", x: 680, y: 160, radius: 75, color: "#06b6d4" }, // บนขวา
@@ -148,7 +147,7 @@ function initCameraSystem() {
 
     try {
         if (typeof Pose === 'undefined' || typeof Camera === 'undefined') {
-            alert('กำลังเชื่อมโยงโครงสร้างปัญญาประดิษฐ์จากเว็บเซิร์ฟเวอร์หลัก โปรดรอสักครู่แล้วเปิดโหมดกล้องใหม่อีกครั้งครับ');
+            alert('ระบบกำลังโหลดส่วนเชื่อมโยง AI ตรวจสอบมือกรุณารอสักครู่แล้วเริ่มใหม่อีกครั้งครับ');
             aiLoading.classList.add('hidden');
             return false;
         }
@@ -179,7 +178,7 @@ function initCameraSystem() {
         aiLoading.classList.add('hidden');
         return true;
     } catch (error) {
-        console.error('Camera setup fail:', error);
+        console.error('Pose camera initialization failed:', error);
         aiLoading.classList.add('hidden');
         return false;
     }
@@ -196,7 +195,7 @@ function selectMode(mode) {
         const isReady = initCameraSystem();
         if (!isReady) return;
 
-        hintText.innerHTML = "🎥 <b>โหมดกล้อง AI:</b> ยื่นข้อมือไปลอยแช่ในวงกลม ก ข ค หรือ ง ค้างไว้ 1.5 วินาทีเพื่อส่งคำตอบ";
+        hintText.innerHTML = "🎥 <b>โหมดกล้อง AI:</b> ยื่นข้อมือซ้ายหรือขวา ไปทับช่อง ก ข ค ง บนจอกล้องและค้างไว้ 1.5 วินาทีเพื่อตอบ";
         choices.forEach(btn => btn.classList.remove('hover:bg-opacity-95', 'active:translate-y-1'));
         
         document.getElementById('start-screen').classList.add('hidden');
@@ -209,7 +208,7 @@ function selectMode(mode) {
             cameraStarted = true;
         }
     } else {
-        hintText.innerHTML = "🖱️ <b>โหมดเมาส์:</b> สามารถเลื่อนเมาส์ไปกดคลิกปุ่มตัวเลือก ก ข ค ง ได้ทันที";
+        hintText.innerHTML = "🖱️ <b>โหมดเมาส์:</b> นำเมาส์ชี้และคลิกปุ่มตัวเลือก ก ข ค ง ด้านล่างจอภาพได้ทันทีครับ";
         choices.forEach(btn => btn.classList.add('hover:bg-opacity-95', 'active:translate-y-1'));
         
         document.getElementById('start-screen').classList.add('hidden');
@@ -283,6 +282,7 @@ function loadNext() {
     const q = mathData[currentIdx];
     document.getElementById('question-text').innerText = q.q;
     
+    // ตั้งค่าข้อความให้ปุ่ม ก ข ค ง เสมอ
     for (let i = 0; i < 4; i++) {
         const btnText = document.querySelector(`#choice-${i} .choice-text`);
         btnText.innerText = q.choices[i];
@@ -415,7 +415,7 @@ function onResults(res) {
         ctx.scale(-1, 1); 
         ctx.drawImage(res.image, 0, 0, 800, 600);
 
-        // วาดรูปวงกลม ก ข ค ง ทั้ง 4 โซนมุม
+        // วาดรูปวงกลม ก ข ค ง ทั้ง 4 โซนมุมบนจอกล้องโดยตรง
         drawTargetZones();
 
         if (res.poseLandmarks && active) {
@@ -486,7 +486,7 @@ function drawTargetZones() {
         ctx.lineWidth = 5;
         ctx.stroke();
 
-        // ป้องกันอักษรตัวหนังสือ ก ข ค ง ไม่ให้กลับด้านตามกล้อง
+        // ป้องกันอักษรตัวหนังสือ ก ข ค ง ไม่ให้กลับด้านตามกล้องกระจกเงา
         ctx.save();
         ctx.translate(zone.x, zone.y);
         ctx.scale(-1, 1); 
@@ -512,7 +512,7 @@ function drawHoverProgress(zoneId, progress) {
     const zone = targetZones[zoneId];
     ctx.beginPath();
     ctx.arc(zone.x, zone.y, zone.radius + 6, -Math.PI / 2, (-Math.PI / 2) + (2 * Math.PI * progress));
-    ctx.strokeStyle = "#fbbf24"; // วงแหวนนับถอยหลังสีทองอร่ามเมื่อกดยืนยันสำเร็จ
+    ctx.strokeStyle = "#fbbf24"; // วงแหวนนับถอยหลังสีทองอร่ามเมื่อชาร์จกดยืนยันสำเร็จ
     ctx.lineWidth = 8;
     ctx.stroke();
 }
