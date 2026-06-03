@@ -9,7 +9,7 @@ body {
     overflow-x: hidden;
 }
 
-/* เอฟเฟกต์รูปสัญลักษณ์คณิตศาสตร์เคลื่อนไหวลอยเบื้องหลังจอ */
+/* เอฟเฟกต์รูปสัญลักษณ์คณิตศาสตร์เบื้องหลัง */
 @keyframes float {
     0% { transform: translateY(0px) rotate(0deg); }
     50% { transform: translateY(-15px) rotate(5deg); }
@@ -25,24 +25,24 @@ body {
 .delay-3 { animation-delay: 4.5s; }
 .delay-4 { animation-delay: 6s; }
 
-/* 🌟 ขนาดฟอนต์ข้อความคำถามขนาดใหญ่ยักษ์สะดุดตา 48px ตามคำขอของ ผอ. */
+/* 🌟 ขนาดฟอนต์โจทย์ข้อความขนาดใหญ่ยักษ์เด่นชัด 48px ตามกำหนด */
 .question-bubble-text {
     font-size: 48px !important;
 }
 
-/* 🌟 ขนาดฟอนต์ของกล่องคะแนนและกล่องจับเวลาด้านบน 40px ชัดเจนระยะไกล */
+/* 🌟 ขนาดฟอนต์ของกล่องคะแนนและกล่องจับเวลาด้านบน 40px */
 .score-card-top, .timer-card-top {
     font-size: 40px !important;
-    padding: 8px 24px;
+    padding: 6px 20px;
     border-radius: 16px;
 }
 
-/* 🌟 ขนาดฟอนต์กล่องตัวเลือกคำตอบ ก ข ค ง ขยายใหญ่พิเศษเป็น 36px ให้สอดรับกัน */
+/* 🌟 ขนาดฟอนต์ตัวเลือกคำตอบเรียงแนวนอน 36px ชัดเจนจากระยะไกล */
 .choice-text {
     font-size: 36px !important;
 }
 
-/* คุณสมบัติการกดปุ่มตัวเลือก */
+/* คุณสมบัติการตอบสนองปุ่มเลือกคำตอบ */
 .choice-btn {
     transition: all 0.2s ease-in-out;
     cursor: pointer;
@@ -53,16 +53,16 @@ body {
     box-shadow: none !important;
 }
 
-/* การจัดระเบียบโครงสร้างสำหรับอุปกรณ์พกพาขนาดเล็ก */
+/* รองรับ Responsive สัดส่วนหน้าจออุปกรณ์พกพาขนาดเล็ก */
 @media (max-width: 768px) {
     .question-bubble-text {
         font-size: 26px !important;
     }
     .score-card-top, .timer-card-top {
         font-size: 22px !important;
-        padding: 4px 12px;
+        padding: 4px 10px;
     }
     .choice-text {
-        font-size: 20px !important;
+        font-size: 18px !important;
     }
 }
